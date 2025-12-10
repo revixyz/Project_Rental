@@ -30,7 +30,7 @@
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="../user/pesanan.php">Pesanan</a>
+          <a class="nav-link text-white" href="../user/pesanan-saya.php">Riwayat</a>
         </li>
 
         <li class="nav-item">
