@@ -2,7 +2,6 @@
 session_start();
 require "../functions.php";
 require "../config/database.php"; 
-require "../assets/auth-header.php";
 
 $success = "";
 $error = "";
@@ -27,7 +26,7 @@ if (isset($_POST["register"])) {
 
             // Insert user baru
             $insert = mysqli_query($conn, "
-                INSERT INTO user (nama, email, password, role)
+                INSERT INTO tb_user (nama, email, password, role)
                 VALUES ('$nama', '$email', '$password', 'user')
             ");
 
@@ -68,6 +67,16 @@ if (isset($_POST["register"])) {
             animation: fadeIn .6s ease-out;
         }
 
+        .brand-title {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: blue;
+        margin-bottom: 5px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        justify-content: center;
+    }
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(20px); }
             to   { opacity: 1; transform: translateY(0); }
@@ -87,6 +96,7 @@ if (isset($_POST["register"])) {
 <body>
 
 <div class="register-card">
+    <div class="text-center brand-title">RENTAL LAPTOP</div><br>
 
     <h3 class="text-center register-title mb-4">Buat Akun Baru</h3>
 

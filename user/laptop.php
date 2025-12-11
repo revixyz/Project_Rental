@@ -7,6 +7,7 @@ $laptop = query( "
     SELECT 
         id_laptop AS id,
         nama,
+        foto,
         spesifikasi,
         Harga AS harga_per_hari,
         stok,
@@ -20,12 +21,6 @@ $laptop = query( "
 
 <!DOCTYPE html>
 <html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <title>Daftar Laptop</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="adminlte.css">
-</head>
 <body>
 
 <div class="container mt-5">
@@ -35,23 +30,43 @@ $laptop = query( "
         <p class="alert alert-info">Maaf, saat ini tidak ada laptop yang tersedia untuk disewa.</p>
     <?php else: ?>
         <?php foreach($laptop as $l): ?>
-            <div class="card mb-3 p-3 shadow-sm">
-                <p>
-                    <strong><?= htmlspecialchars($l["nama"]); ?></strong> | 
-                    Harga: <strong>Rp<?= number_format($l["harga_per_hari"]); ?>/hari</strong> |
-                    Status: <span class="badge bg-success"><?= htmlspecialchars($l["status"]); ?></span> |
-                    Stok: <strong><?= $l["stok"]; ?></strong> unit
-                </p>
 
-                <p class="text-muted small">
-                    Spesifikasi: <?= $l["spesifikasi"]; ?>
-                </p>
-                
-                <a href="pesanan.php?id_laptop=<?= $l['id']; ?>" 
-                   class="btn btn-primary btn-sm mt-2" style="width: 150px;">
-                    Sewa Sekarang
-                </a>
-            </div>
+           <div class="card mb-3 p-3 shadow-sm">
+    <div class="row g-3 align-items-center">
+
+        <!-- FOTO LAPTOP -->
+        <div class="col-md-3">
+            <img src="../assets/laptop/<?= $l['foto']; ?>"
+                 class="img-fluid rounded"
+                 style="height: 180px; width: 100%; object-fit: cover;">
+        </div>
+
+        <!-- DETAIL LAPTOP -->
+        <div class="col-md-9">
+
+            <h5 class="mb-1"><strong><?= htmlspecialchars($l["nama"]); ?></strong></h5>
+
+            <p class="mb-1">
+                Harga: <strong>Rp<?= number_format($l["harga_per_hari"]); ?></strong> / hari |
+                Status: <span class="badge bg-success"><?= htmlspecialchars($l["status"]); ?></span> |
+                Stok: <strong><?= $l["stok"]; ?></strong> unit
+            </p>
+
+            <p class="text-muted small mb-2">
+                <strong>Spesifikasi:</strong> <?= $l["spesifikasi"]; ?>
+            </p>
+
+            <a href="pesanan.php?id_laptop=<?= $l['id']; ?>" 
+               class="btn btn-primary btn-sm mt-2"
+               style="width: 150px;">
+                Sewa Sekarang
+            </a> 
+
+        </div>
+
+    </div>
+</div>
+
         <?php endforeach; ?>
     <?php endif; ?>
 

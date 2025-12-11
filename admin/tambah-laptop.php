@@ -5,17 +5,43 @@ if (isset($_POST["simpan"])) {
 
     $nama   = $_POST["nama"];
     $stok   = $_POST["stok"];
+    $spesifikasi = $_POST["spesifikasi"];
     $harga  = $_POST["harga"];
 
-    $query = "INSERT INTO laptop (nama, stok, harga)
-            VALUES ('$nama', '$stok', '$harga')";
+    // === Upload Foto ===
+    $namaFile = $_FILES['foto']['name'];
+    $tmpName  = $_FILES['foto']['tmp_name'];
+    $error    = $_FILES['foto']['error'];
+
+    // Folder untuk menyimpan gambar laptop
+    $folder = "../assets/laptop/";
+
+    // Buat folder jika belum ada
+    if (!file_exists($folder)) {
+        mkdir($folder, 0777, true);
+    }
+
+    // Jika foto diupload
+    if ($error === 0) {
+        // Beri nama unik agar tidak bentrok
+        $namaBaru = time() . "_" . $namaFile;
+
+        move_uploaded_file($tmpName, $folder . $namaBaru);
+    } else {
+        $namaBaru = null; // jika tidak ada foto
+    }
+
+    // === Simpan ke Database ===
+    $query = "INSERT INTO tb_laptop (nama, foto, spesifikasi, harga, stok)
+          VALUES ('$nama', '$namaBaru', '$spesifikasi', '$harga', '$stok')";
+
 
     mysqli_query($conn, $query);
 
     echo "<script>
-          alert('Laptop berhasil ditambahkan!');
-          document.location.href = 'laptop.php';
-        </script>";
+            alert('Laptop berhasil ditambahkan!');
+            document.location.href = 'laptop.php';
+          </script>";
 }
 ?>
 
@@ -36,21 +62,31 @@ if (isset($_POST["simpan"])) {
 
         <h2 class="mb-4">Tambah Laptop</h2>
 
-        <form method="post">
+        <form method="post" enctype="multipart/form-data">
 
             <div class="mb-3">
-                <label>Nama Laptop</label>
+                <label class="form-label">Nama Laptop</label>
                 <input type="text" name="nama" class="form-control" required>
             </div>
 
             <div class="mb-3">
-                <label>Stok</label>
+                <label class="form-label">Spesifikasi Laptop</label>
+                <textarea name="spesifikasi" class="form-control" required></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Harga / Hari</label>
+                <input type="number" name="harga" class="form-control" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Stok</label>
                 <input type="number" name="stok" class="form-control" required>
             </div>
 
             <div class="mb-3">
-                <label>Harga / Hari</label>
-                <input type="number" name="harga" class="form-control" required>
+                <label class="form-label">Foto Laptop</label>
+                <input type="file" name="foto" class="form-control" accept="image/*" required>
             </div>
 
             <button type="submit" name="simpan" class="btn btn-primary">Simpan</button>
@@ -61,5 +97,4 @@ if (isset($_POST["simpan"])) {
     </div>
 
 </body>
-
 </html>

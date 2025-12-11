@@ -40,23 +40,30 @@ $l = $laptop[0];
 // PROSES INSERT PEMESANAN
 if (isset($_POST['pesan'])) {
 
-    $tanggal_sewa = $_POST['tanggal_sewa'];
+    // ambil & sanitize input
+    $tanggal_sewa = mysqli_real_escape_string($conn, $_POST['tanggal_sewa']);
     $durasi = intval($_POST['durasi']);
-    $harga = $l['harga_per_hari'];
+    $harga = floatval($l['harga_per_hari']);
     $total_harga = $harga * $durasi;
 
-    // Insert ke tabel tb_pemesanan
+    // jika kamu tidak ingin mengisi bukti saat pemesanan, set NULL atau ''
+    $bukti = ''; // atau NULL jika kolom menerima NULL
+
+    // Gunakan status awal yang konsisten dengan ENUM di DB (sesuaikan jika berbeda)
+    $status_awal = 'Menunggu Pembayaran';
+
+    // Build query (pastikan nama tabel tb_pesanan sesuai DB)
     $query_insert = "
-        INSERT INTO tb_pemesanan 
-            (id_user, id_laptop, tanggal_sewa, durasi, total_harga, status)
+        INSERT INTO tb_pesanan 
+            (id_user, id_laptop, tanggal_sewa, durasi, total_harga, status, bukti, metode_bayar, rekening_tujuan)
         VALUES 
-            ($id_user, $id_laptop, '$tanggal_sewa', $durasi, $total_harga, 'Menunggu')
+            ($id_user, $id_laptop, '$tanggal_sewa', $durasi, $total_harga, '$status_awal', '$bukti', '', '')
     ";
 
     $insert = mysqli_query($conn, $query_insert);
 
     if ($insert) {
-        // Kurangi stok
+        // Kurangi stok hanya jika insert sukses
         mysqli_query($conn, "UPDATE tb_laptop SET stok = stok - 1 WHERE id_laptop = $id_laptop");
 
         echo "<script>
@@ -65,9 +72,13 @@ if (isset($_POST['pesan'])) {
         </script>";
         exit;
     } else {
-        echo "<script>alert('Gagal membuat pesanan!');</script>";
+        // tampilkan error DB untuk debugging (hapus/ubah di production)
+        $err = mysqli_error($conn);
+        echo "<script>alert('Gagal membuat pesanan! DB error: " . addslashes($err) . "');</script>";
     }
 }
+
+
 ?>
 
 <!DOCTYPE html>

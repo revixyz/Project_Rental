@@ -2,7 +2,6 @@
 session_start();
 require "../functions.php";
 require "../config/database.php"; 
-require "../assets/auth-header.php"; 
 
 // Jika user sudah login, cegah akses login
 if (isset($_SESSION["login"])) {
@@ -83,6 +82,15 @@ if (isset($_POST["login"])) {
         box-shadow: 0 10px 25px rgba(0,0,0,0.15);
         animation: fadeIn .6s ease-out;
     }
+    .brand-title {
+        font-size: 1.8rem;
+        font-weight: 800;
+        color: blue;
+        margin-bottom: 5px;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        justify-content: center;
+    }
 
     @keyframes fadeIn {
         from { opacity: 0; transform: translateY(20px); }
@@ -102,6 +110,7 @@ if (isset($_POST["login"])) {
 <body>
 
 <div class="login-card">
+    <div class="text-center brand-title">RENTAL LAPTOP</div>
 
     <h3 class="text-center login-title mb-4">Login</h3>
 

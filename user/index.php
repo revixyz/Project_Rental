@@ -28,17 +28,19 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
 
 <!-- SELAMAT DATANG -->
 <div class="container mt-5">
-    <h3 class="text-center mb-4">Selamat Datang, <?= $_SESSION["nama"]; ?></h3>
+    
 </div>
 
 <!-- HERO SECTION -->
 <div class="hero">
     <div>
+        <h3 class="text-center mb-4">Selamat Datang, <?= $_SESSION["nama"]; ?></h3><br>
         <h1>Rental Laptop Terpercaya</h1>
         <p>Sewa laptop berkualitas untuk kebutuhan kuliah, kerja, bisnis, dan event</p>
-        <a href="#produk" class="btn btn-primary btn-lg mt-3">Sewa Sekarang</a>
+        <a href="#produk" class="btn btn-primary btn-lg mt-3">Daftar Laptop</a>
     </div>
-</div>
+</div><br><br>
+
 
 <!-- FITUR -->
 <div class="container mt-4">
@@ -72,13 +74,19 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
     <div class="row mt-4">
         <?php if (count($getLaptop) > 0): ?>
             <?php foreach ($getLaptop as $l): ?>
+                <?php 
+                    // Tentukan foto
+                    $foto = (!empty($l["foto"])) 
+                                ? "../assets/laptop/" . $l["foto"] 
+                                : "../assets/img/default-150x150.png";
+                ?>
                 <div class="col-md-4 mb-4">
                     <div class="card shadow-sm card-laptop p-2">
-                        <img src="../assets/img/default-150x150.png" class="card-img-top" alt="Laptop">
+                          <img src="<?= $foto; ?>" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Laptop">
                         <div class="card-body">
                             <h5 class="card-title"> <?= $l["nama"]; ?> </h5>
-                            <p class="card-text">Harga: <strong>Rp <?= number_format($l["Harga"]); ?>/hari</strong></p>
-                            <a href="sewa.php" class="btn btn-primary w-100">Lihat Detail</a>
+                            <p class="card-text">Harga: <strong>Rp <?= number_format($l["harga"]); ?>/hari</strong></p>
+                            <a href="detail-laptop.php?id=<?= $l['id_laptop']; ?>" class="btn btn-primary w-100">Lihat Detail</a>
 
                         </div>
                     </div>
@@ -92,10 +100,7 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
     </div>
 </div>
 
-<!-- FOOTER -->
-<footer>
-    <p>&copy; 2025 Rental Laptop - Semua Hak Dilindungi</p>
-</footer>
+
 
 <?php require "../assets/footer.php"; ?>
 </body>

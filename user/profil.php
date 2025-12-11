@@ -82,7 +82,7 @@ $user = $user[0];
 
             <!-- Header Profil -->
             <div class="profile-header">
-                <img src="../assets/img/default-user.png" alt="Foto User">
+                <i><h1>WELCOME</h1></i>
                 <h4><?= htmlspecialchars($user["nama"]); ?></h4>
                 <span class="badge bg-primary"><?= htmlspecialchars($user["role"]); ?></span>
             </div>
@@ -103,7 +103,7 @@ $user = $user[0];
                     </tr>
                     <tr>
                         <th>Password</th>
-                        <td><i>(disembunyikan untuk keamanan)</i></td>
+                        <td><i><?= htmlspecialchars($user["password"]); ?></i></td>
                     </tr>
                 </table>
 
