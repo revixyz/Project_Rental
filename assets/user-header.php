@@ -13,6 +13,10 @@
             background: linear-gradient(135deg, #4c6ef5, #5f3dc4);
             padding: 14px 0;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            
         }
 
         .navbar-brand {
