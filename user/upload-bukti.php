@@ -11,40 +11,81 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
 if (!isset($_GET['id'])) {
     die("ID pesanan tidak valid.");
 }
-$id_pesanan = $_GET['id'];
+$id_pesanan = intval($_GET['id']);
 
-// Proses upload
+// ========================
+// PROSES UPLOAD
+// ========================
 if (isset($_POST['upload'])) {
 
-    $metode       = $_POST['metode'];
-    $rekening     = $_POST['rekening'];
+    $metode   = $_POST['metode'];
+    $rekening = $_POST['rekening'];
 
-    // Upload file
-    $namaFile = $_FILES['bukti']['name'];
-    $tmp      = $_FILES['bukti']['tmp_name'];
-    $folder   = "../assets/uploads/" . $namaFile;
+    // ========================
+    // VALIDASI FILE
+    // ========================
+    $file = $_FILES['bukti'];
 
-    move_uploaded_file($tmp, $folder);
+    $allowed_ext  = ['jpg', 'jpeg', 'png'];
+    $max_size     = 2 * 1024 * 1024; // 2MB
 
-    // Simpan ke database
+    $file_name = $file['name'];
+    $file_tmp  = $file['tmp_name'];
+    $file_size = $file['size'];
+    $file_err  = $file['error'];
+
+    $ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
+
+    // ❌ Error upload
+    if ($file_err !== 0) {
+        echo "<script>alert('Gagal upload file!'); window.history.back();</script>";
+        exit;
+    }
+
+    // ❌ Bukan JPG / PNG
+    if (!in_array($ext, $allowed_ext)) {
+        echo "<script>
+            alert('Bukti pembayaran hanya boleh JPG atau PNG!');
+            window.history.back();
+        </script>";
+        exit;
+    }
+
+    // ❌ Ukuran terlalu besar
+    if ($file_size > $max_size) {
+        echo "<script>
+            alert('Ukuran file maksimal 2MB!');
+            window.history.back();
+        </script>";
+        exit;
+    }
+
+    // ========================
+    // SIMPAN FILE
+    // ========================
+    $new_name = 'bukti_' . $id_pesanan . '_' . time() . '.' . $ext;
+    $folder = "../assets/uploads/" . $new_name;
+
+    move_uploaded_file($file_tmp, $folder);
+
+    // ========================
+    // UPDATE DATABASE
+    // ========================
     $status = "Menunggu Konfirmasi";
-    $status = trim($status); // hilangkan spasi tak terlihat
 
     mysqli_query($conn, "
         UPDATE tb_pesanan SET 
-            bukti='$namaFile',
+            bukti='$new_name',
             metode_bayar='$metode',
             rekening_tujuan='$rekening',
             status='$status'
-        WHERE id_pesanan='$id_pesanan'
+        WHERE id_pesanan=$id_pesanan
     ");
-
 
     $_SESSION['pesan'] = "Bukti pembayaran berhasil diupload!";
     header("Location: pesanan-saya.php");
     exit;
 }
-
 ?>
 
 <!DOCTYPE html>
@@ -56,15 +97,15 @@ if (isset($_POST['upload'])) {
 </head>
 
 <body>
-    <?php require "../assets/user-header.php"; ?>
+<?php require "../assets/user-header.php"; ?>
 
 <div class="container mt-5">
 
     <h3 class="mb-3">Upload Bukti Pembayaran</h3>
 
-    <form action="" method="POST" enctype="multipart/form-data">
-        
-        <!-- METODE PEMBAYARAN -->
+    <form method="POST" enctype="multipart/form-data">
+
+        <!-- METODE -->
         <div class="mb-3">
             <label class="form-label">Metode Pembayaran</label>
             <select name="metode" id="metode" class="form-select" required onchange="showRekening()">
@@ -76,25 +117,24 @@ if (isset($_POST['upload'])) {
             </select>
         </div>
 
-        <!-- REKENING TUJUAN -->
+        <!-- REKENING -->
         <div class="mb-3" id="rekeningBox" style="display:none;">
             <label class="form-label">Nomor Rekening Tujuan</label>
-
             <div class="input-group">
                 <input type="text" id="rekening" name="rekening" class="form-control" readonly>
-
-                <button type="button" class="btn btn-primary" onclick="copyRekening()">
-                    Copy
-                </button>
+                <button type="button" class="btn btn-primary" onclick="copyRekening()">Copy</button>
             </div>
-
-            <small class="text-muted">Silakan transfer sesuai metode yang dipilih.</small>
         </div>
 
-        <!-- UPLOAD BUKTI -->
+        <!-- UPLOAD -->
         <div class="mb-3">
             <label class="form-label">Upload Bukti Pembayaran</label>
-            <input type="file" name="bukti" class="form-control" required>
+            <input type="file"
+                   name="bukti"
+                   class="form-control"
+                   accept=".jpg,.jpeg,.png"
+                   required>
+            <small class="text-muted">Format JPG / PNG, maksimal 2MB</small>
         </div>
 
         <button type="submit" name="upload" class="btn btn-primary">Kirim</button>
@@ -104,13 +144,12 @@ if (isset($_POST['upload'])) {
 </div>
 
 <script>
-// Daftar nomor rekening
 function showRekening() {
-    let metode = document.getElementById("metode").value;
-    let rekeningBox = document.getElementById("rekeningBox");
-    let rekening = document.getElementById("rekening");
+    const metode = document.getElementById("metode").value;
+    const rekeningBox = document.getElementById("rekeningBox");
+    const rekening = document.getElementById("rekening");
 
-    let nomor = {
+    const nomor = {
         "BCA": "1234567890 (a.n Rental Laptop)",
         "BRI": "9876543210 (a.n Rental Laptop)",
         "Dana": "082112223333 (a.n Rental Laptop)",
@@ -126,7 +165,7 @@ function showRekening() {
 }
 
 function copyRekening() {
-    let rekening = document.getElementById("rekening");
+    const rekening = document.getElementById("rekening");
     navigator.clipboard.writeText(rekening.value);
     alert("Nomor rekening berhasil disalin!");
 }
