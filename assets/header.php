@@ -113,6 +113,12 @@
 
         <li class="nav-item">
           <a class="nav-link 
+            <?= basename($_SERVER['PHP_SELF']) == 'riwayat_pengembalian.php' ? 'active-menu' : '' ?>" 
+            href="../admin/riwayat_pengembalian.php">Riwayat Pengembalian</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link 
             <?= basename($_SERVER['PHP_SELF']) == 'user.php' ? 'active-menu' : '' ?>" 
             href="../admin/user.php">User</a>
         </li>
