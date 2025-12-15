@@ -43,7 +43,7 @@ if (isset($_POST['pesan'])) {
     $harga = floatval($l['harga_per_hari']);
     $total_harga = $harga * $durasi;
 
-    // 🔒 VALIDASI BACKEND TANGGAL (WAJIB)
+    // 🔒 VALIDASI TANGGAL (BACKEND)
     $today = date('Y-m-d');
     if ($tanggal_sewa < $today) {
         echo "<script>
@@ -53,10 +53,10 @@ if (isset($_POST['pesan'])) {
         exit;
     }
 
-    // 🔒 VALIDASI DURASI
-    if ($durasi < 1) {
+    // 🔒 VALIDASI DURASI (1–7 HARI)
+    if ($durasi < 1 || $durasi > 7) {
         echo "<script>
-            alert('Durasi minimal 1 hari!');
+            alert('Durasi sewa maksimal 7 hari!');
             window.history.back();
         </script>";
         exit;
@@ -117,7 +117,7 @@ if (isset($_POST['pesan'])) {
 
         <form method="POST">
 
-            <!-- ✅ TANGGAL (KALENDER ADA, KETIK MATI) -->
+            <!-- TANGGAL SEWA -->
             <label class="form-label">Tanggal Sewa</label>
             <input type="date"
                    id="tanggal_sewa"
@@ -127,11 +127,15 @@ if (isset($_POST['pesan'])) {
                    value="<?= date('Y-m-d'); ?>"
                    required>
 
-            <label class="form-label mt-3">Durasi (hari)</label>
+            <!-- DURASI -->
+            <label class="form-label mt-3">
+                Durasi (hari) <small class="text-muted">(Maksimal 7 hari)</small>
+            </label>
             <input type="number"
                    name="durasi"
                    class="form-control"
                    min="1"
+                   max="7"
                    required>
 
             <button type="submit" name="pesan" class="btn btn-primary mt-4">
@@ -145,17 +149,12 @@ if (isset($_POST['pesan'])) {
     </div>
 </div>
 
-<!-- 🔒 JS: MATIKAN KETIK MANUAL, KALENDER TETAP ADA -->
+<!-- 🔒 JS: MATIKAN KETIK MANUAL DI DATE -->
 <script>
     const tanggalInput = document.getElementById('tanggal_sewa');
 
-    tanggalInput.addEventListener('keydown', function (e) {
-        e.preventDefault();
-    });
-
-    tanggalInput.addEventListener('paste', function (e) {
-        e.preventDefault();
-    });
+    tanggalInput.addEventListener('keydown', e => e.preventDefault());
+    tanggalInput.addEventListener('paste', e => e.preventDefault());
 </script>
 
 </body>
