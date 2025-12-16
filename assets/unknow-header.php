@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="id">
 <?php
+$isLogin = isset($_SESSION['login']) && $_SESSION['login'] === true;
 
 ?>
 
