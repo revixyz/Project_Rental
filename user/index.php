@@ -21,6 +21,7 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
     <title>Home Rental Laptop</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/user-style.css" />
+    <link rel="stylesheet" href="../assets/css/index.css">
 </head>
 <body>
 
@@ -31,15 +32,16 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
     
 </div>
 
-<!-- HERO SECTION -->
+<!-- HERO SECTION  -->
 <div class="hero">
-    <div>
-        <h3 class="text-center mb-4">Selamat Datang, <?= $_SESSION["nama"]; ?></h3><br>
+    <div class="container">
+        <h3 class="mb-3">Selamat Datang <?= $_SESSION["nama"]; ?>👋</h3>
         <h1>Rental Laptop Terpercaya</h1>
-        <p>Sewa laptop berkualitas untuk kebutuhan kuliah, kerja, bisnis, dan event</p>
-        <a href="#produk" class="btn btn-primary btn-lg mt-3">Daftar Laptop</a>
+        <p>Sewa laptop berkualitas untuk kuliah, kerja, bisnis, dan event</p>
+        <a href="#produk" class="btn btn-lg mt-4">Lihat Daftar Laptop</a>
     </div>
-</div><br><br>
+</div>
+<br><br>
 
 
 <!-- FITUR -->
@@ -81,7 +83,7 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
                                 : "../assets/img/default-150x150.png";
                 ?>
                 <div class="col-md-4 mb-4">
-                    <div class="card shadow-sm card-laptop p-2">
+                    <div class="card shadow-sm card-laptop p-3 h-100">
                           <img src="<?= $foto; ?>" class="card-img-top" style="height: 200px; object-fit: cover;" alt="Laptop">
                         <div class="card-body">
                             <h5 class="card-title"> <?= $l["nama"]; ?> </h5>
@@ -102,6 +104,5 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
 
 
 
-<?php require "../assets/footer.php"; ?>
 </body>
 </html>

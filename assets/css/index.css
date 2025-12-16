@@ -1,0 +1,77 @@
+
+/* ===== HERO ===== */
+.hero {
+    background: linear-gradient(135deg, #4c6ef5, #5f3dc4);
+    color: #fff;
+    padding: 100px 20px;
+    text-align: center;
+    border-radius: 0 0 40px 40px;
+}
+
+.hero h1 {
+    font-size: 3rem;
+    font-weight: 800;
+}
+
+.hero p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.hero .btn {
+    background: #ffdd57;
+    color: #000;
+    font-weight: 700;
+    border-radius: 30px;
+    padding: 12px 30px;
+}
+
+.hero .btn:hover {
+    background: #fcc419;
+}
+
+/* ===== SECTION TITLE ===== */
+.section-title {
+    font-weight: 800;
+    margin-bottom: 30px;
+    position: relative;
+}
+
+.section-title::after {
+    content: "";
+    width: 80px;
+    height: 4px;
+    background: #5f3dc4;
+    display: block;
+    margin: 12px auto 0;
+    border-radius: 10px;
+}
+
+/* ===== CARD FITUR ===== */
+.card {
+    border-radius: 20px;
+    transition: .3s;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 10px 30px rgba(0,0,0,.15);
+}
+
+/* ===== CARD LAPTOP ===== */
+.card-laptop img {
+    border-radius: 16px;
+}
+
+.card-laptop .card-body {
+    text-align: center;
+}
+
+.card-laptop h5 {
+    font-weight: 700;
+}
+
+.card-laptop .btn {
+    border-radius: 20px;
+    font-weight: 600;
+}

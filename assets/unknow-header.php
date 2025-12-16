@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="id">
+<?php
+
+?>
+
 <head>
     <meta charset="UTF-8">
-    <title>User - Rental Laptop</title>
+    <title>Rental Laptop</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -44,8 +48,8 @@
             font-weight: 700;
         }
 
-        /* Logout button */
-        .btn-logout {
+        /* Login button */
+        .btn-login {
             background: linear-gradient(135deg, #ffd43b, #fab005);
             color: #212529;
             border: none;
@@ -56,19 +60,19 @@
             transition: all 0.25s ease;
         }
 
-        .btn-logout:hover {
+        .btn-login:hover {
             background: linear-gradient(135deg, #fcc419, #f59f00);
             transform: translateY(-2px) scale(1.05);
             box-shadow: 0 6px 18px rgba(250, 176, 5, 0.6);
         }
+
     </style>
 </head>
-<body>
 
 <nav class="navbar navbar-expand-lg navbar-custom">
   <div class="container">
 
-    <a class="navbar-brand text-white" href="../user/index.php">RENTAL LAPTOP</a>
+    <a class="navbar-brand text-white" href="index.php">RENTAL LAPTOP</a>
 
     <button class="navbar-toggler text-white" type="button" data-bs-toggle="collapse" data-bs-target="#navbarUser">
       <span class="navbar-toggler-icon"></span>
@@ -79,71 +83,72 @@
 
         <li class="nav-item">
           <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active-custom' : '' ?>" 
-             href="../user/index.php">Home</a>
+             href="index.php">Home</a>
         </li>
 
         <li class="nav-item">
           <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'laptop.php' ? 'active-custom' : '' ?>" 
-             href="../user/laptop.php">Laptop</a>
+             href="laptop.php">Laptop</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'pesanan-saya.php' ? 'active-custom' : '' ?>" 
-             href="../user/pesanan-saya.php">Riwayat</a>
+            <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'pesanan-saya.php' ? 'active-custom' : '' ?>"
+                href="<?= $isLogin ? '../user/pesanan-saya.php' : '#' ?>"
+                onclick="<?= !$isLogin ? 'showLoginAlert(); return false;' : '' ?>">
+                Riwayat
+            </a>
+
         </li>
 
         <li class="nav-item">
-          <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'pengembalian.php' ? 'active-custom' : '' ?>" 
-             href="../user/pengembalian.php">Pengembalian</a>
-        </li>
+            <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'pengembalian.php' ? 'active-custom' : '' ?>"
+                href="<?= $isLogin ? '../user/pengembalian.php' : '#' ?>"
+                onclick="<?= !$isLogin ? 'showLoginAlert(); return false;' : '' ?>">
+                Pengembalian
+            </a>
 
-        <li class="nav-item">
-          <a class="nav-link <?= basename($_SERVER['PHP_SELF']) == 'profil.php' ? 'active-custom' : '' ?>" 
-             href="../user/profil.php">Profil</a>
         </li>
 
         <li class="nav-item ms-2">
-          <button class="btn btn-logout" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</button>
+          <a class="btn btn-login" href="auth/login.php">Login</a>
         </li>
 
       </ul>
     </div>
   </div>
 </nav>
-
 <div class="container mt-4">
 
-<!-- MODAL KONFIRMASI LOGOUT -->
-<div class="modal fade" id="logoutModal" tabindex="-1" aria-hidden="true">
+<!-- MODAL LOGIN ALERT -->
+<div class="modal fade" id="loginAlert" tabindex="-1">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content border-0 shadow-lg rounded-4">
-      
+    <div class="modal-content rounded-4 shadow">
       <div class="modal-header border-0">
-        <h5 class="modal-title fw-bold">Konfirmasi Logout</h5>
+        <h5 class="modal-title fw-bold text-danger">
+          Akses Terbatas
+        </h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
       </div>
 
       <div class="modal-body text-center">
-        <p class="mb-0 fs-5">
-          Apakah kamu yakin ingin <strong>logout</strong>?
+        <p class="mb-3">
+          Kamu harus <strong>login terlebih dahulu</strong><br>
         </p>
-        <small class="text-muted">
-          Kamu harus login kembali untuk mengakses pesanan.
-        </small>
-      </div>
-
-      <div class="modal-footer border-0 justify-content-center">
-        <button type="button" class="btn btn-secondary px-4 rounded-pill" data-bs-dismiss="modal">
-          Batal
-        </button>
-        <a href="../auth/logout.php" class="btn btn-danger px-4 rounded-pill">
-          Ya, Logout
+        <a href="auth/login.php" class="btn btn-primary px-4">
+          Login Sekarang
         </a>
       </div>
-
     </div>
   </div>
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+function showLoginAlert() {
+    const modal = new bootstrap.Modal(document.getElementById('loginAlert'));
+    modal.show();
+}
+</script>
+
 
