@@ -73,18 +73,20 @@ if (isset($_POST['upload'])) {
     // ========================
     $status = "Menunggu Konfirmasi";
 
-    mysqli_query($conn, "
-        UPDATE tb_pesanan SET 
-            bukti='$new_name',
-            metode_bayar='$metode',
-            rekening_tujuan='$rekening',
-            status='$status'
-        WHERE id_pesanan=$id_pesanan
-    ");
+mysqli_query($conn, "
+    UPDATE tb_pesanan SET 
+        bukti='$new_name',
+        metode_bayar='$metode',
+        rekening_tujuan='$rekening',
+        status='$status',
+        is_locked=1
+    WHERE id_pesanan=$id_pesanan
+");
 
-    $_SESSION['pesan'] = "Bukti pembayaran berhasil diupload!";
-    header("Location: pesanan-saya.php");
-    exit;
+$_SESSION['pesan'] = "Bukti pembayaran berhasil diupload!";
+header("Location: pesanan-saya.php");
+exit;
+
 }
 ?>
 

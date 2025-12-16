@@ -63,6 +63,7 @@ $data = $conn->query($query);
                     <th>Total Harga</th>
                     <th>Status</th>
                     <th>Bukti Pembayaran</th>
+                    <th>Ubah Pesanan</th>
                 </tr>
             </thead>
 
@@ -70,7 +71,7 @@ $data = $conn->query($query);
 
             <?php if ($data->num_rows == 0): ?>
                 <tr>
-                    <td colspan="8" class="text-center py-4">
+                    <td colspan="9" class="text-center py-4">
                         <strong>Tidak ada pesanan.</strong><br>
                         Anda belum memiliki riwayat pesanan.
                     </td>
@@ -93,12 +94,9 @@ $data = $conn->query($query);
                     <td>Rp<?= number_format($p['total_harga']); ?></td>
 
                     <!-- STATUS -->
-                    <td>
+                    <td class="text-center">
                         <?php
                         switch ($p['status']) {
-                            case 'Menunggu':
-                                echo '<span class="badge bg-warning text-dark">Menunggu</span>';
-                                break;
                             case 'Menunggu Pembayaran':
                                 echo '<span class="badge bg-primary">Menunggu Pembayaran</span>';
                                 break;
@@ -117,6 +115,9 @@ $data = $conn->query($query);
                             case 'Selesai':
                                 echo '<span class="badge bg-success">Selesai</span>';
                                 break;
+                            case 'Dibatalkan':
+                                echo '<span class="badge bg-danger">Dibatalkan</span>';
+                                break;
                             default:
                                 echo '<span class="badge bg-secondary">'.$p['status'].'</span>';
                         }
@@ -124,30 +125,61 @@ $data = $conn->query($query);
                     </td>
 
                     <!-- BUKTI PEMBAYARAN -->
-                    <td>
+                    <td class="text-center">
+
+                        <!-- TAMPILKAN BUKTI JIKA ADA -->
+                        <?php if (!empty($p['bukti'])): ?>
+                            <a href="../assets/uploads/<?= $p['bukti']; ?>" target="_blank">
+                                <img src="../assets/uploads/<?= $p['bukti']; ?>"
+                                     class="rounded border mb-2"
+                                     style="width:80px;height:80px;object-fit:cover;">
+                            </a>
+                        <?php endif; ?>
+
+                        <!-- TOMBOL UPLOAD / UPLOAD ULANG -->
                         <?php if (
                             $p['status'] == 'Menunggu Pembayaran' ||
-                            $p['status'] == 'Ditolak Pembayaran'
+                            $p['status'] == 'Ditolak Pembayaran' ||
+                            $p['status'] == 'Menunggu Konfirmasi'
                         ): ?>
 
                             <a href="upload-bukti.php?id=<?= $p['id_pesanan']; ?>" 
-                               class="btn btn-warning btn-sm">
+                            class="btn btn-warning btn-sm">
                                 <?= $p['status'] == 'Ditolak Pembayaran'
                                     ? 'Upload Ulang Bukti'
                                     : 'Upload Bukti'; ?>
                             </a>
 
-                        <?php elseif (!empty($p['bukti'])): ?>
+                        <?php elseif ($p['status'] == 'Dibatalkan'): ?>
 
-                            <a href="../assets/uploads/<?= $p['bukti']; ?>" target="_blank">
-                                <img src="../assets/uploads/<?= $p['bukti']; ?>" 
-                                     class="rounded border"
-                                     style="width:60px;height:60px;object-fit:cover;">
+                            <span class="badge bg-danger">
+                                Tidak ada pembayaran
+                            </span>
+
+                        <?php endif; ?>
+
+
+                    </td>
+
+                    <!-- EDIT DURASI -->
+                    <td>
+                        <?php if ($p['status'] == 'Menunggu Pembayaran'): ?>
+
+                            <a href="edit-pesanan.php?id=<?= $p['id_pesanan']; ?>"
+                            class="btn btn-sm btn-warning mb-1 d-block">
+                                Edit Durasi
+                            </a>
+
+                            <a href="batalkan-pesanan.php?id=<?= $p['id_pesanan']; ?>"
+                            onclick="return confirm('Yakin ingin membatalkan pesanan ini?');"
+                            class="btn btn-sm btn-danger d-block">
+                                Batalkan Pesanan
                             </a>
 
                         <?php else: ?>
-                            <span class="badge bg-secondary">-</span>
+                            <span class="text-muted">Tidak bisa diedit</span>
                         <?php endif; ?>
+
                     </td>
 
                 </tr>

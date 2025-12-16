@@ -126,7 +126,7 @@ $data = $conn->query($sql);
                         <td><?= $p['tanggal_sewa']; ?></td>
                         <td><?= $p['durasi']; ?> hari</td>
                         <td><?= $jatuh_tempo; ?></td>
-                        <td>
+                        <td class="text-center">
                             <span class="badge bg-success">Sedang Disewa</span>
                         </td>
                         <td>
