@@ -43,7 +43,7 @@ if (isset($_POST['pesan'])) {
     $harga = floatval($l['harga_per_hari']);
     $total_harga = $harga * $durasi;
 
-    // 🔒 VALIDASI TANGGAL (BACKEND)
+    // VALIDASI TANGGAL (BACKEND)
     $today = date('Y-m-d');
     if ($tanggal_sewa < $today) {
         echo "<script>
@@ -53,7 +53,7 @@ if (isset($_POST['pesan'])) {
         exit;
     }
 
-    // 🔒 VALIDASI DURASI (1–7 HARI)
+    // VALIDASI DURASI (1–7 HARI)
     if ($durasi < 1 || $durasi > 7) {
         echo "<script>
             alert('Durasi sewa maksimal 7 hari!');

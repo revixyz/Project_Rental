@@ -118,8 +118,7 @@
 
           <li class="nav-item">
             <a href="laporan.php" class="nav-link <?= (basename($_SERVER['PHP_SELF']) == 'laporan.php') ? 'active' : '' ?>">
-              <i class="nav-icon fas fa-chart-line"></i>
-              <p>Laporan Keuangan</p>
+              Laporan Keuangan</a>
             </a>
           </li>
 

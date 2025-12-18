@@ -1,9 +1,14 @@
 <?php
 session_start();
-require "functions.php";
-require_once "config/database.php";
+require "../functions.php";
+require_once "../config/database.php";
 
 
+// Proteksi halaman
+if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
+    header("Location: ../auth/login.php");
+    exit;
+}
 
 // Pastikan ada ID laptop
 if (!isset($_GET["id"])) {
@@ -11,10 +16,24 @@ if (!isset($_GET["id"])) {
     exit;
 }
 
+$isLogin = isset($_SESSION["login"]) && $_SESSION["role"] == "user";
+
+
 $id = intval($_GET["id"]);
 
-// Ambil data laptop berdasarkan ID
-$laptop = query("SELECT * FROM tb_laptop WHERE id_laptop = $id");
+// Ambil data laptop
+$laptop = query("
+    SELECT 
+        id_laptop,
+        nama,
+        harga,
+        spesifikasi,
+        foto,
+        stok
+    FROM tb_laptop
+    WHERE id_laptop = $id
+");
+
 
 if (!$laptop || count($laptop) == 0) {
     echo "<script>alert('Laptop tidak ditemukan'); window.location='index.php';</script>";
@@ -25,8 +44,8 @@ $l = $laptop[0];
 
 // Cek foto
 $foto = (!empty($l["foto"])) 
-        ? "assets/laptop/" . $l["foto"]
-        : "assets/img/default-150x150.png";
+        ? "../assets/laptop/" . $l["foto"]
+        : "../assets/img/default-150x150.png";
 ?>
 <!DOCTYPE html>
 <html lang="id">
@@ -38,7 +57,7 @@ $foto = (!empty($l["foto"]))
 </head>
 <body>
 
-<?php require "assets/unknow-header.php"; ?>
+<?php require "../assets/user-header.php"; ?>
 
 <div class="container mt-5">
     <div class="card shadow-lg p-4">
@@ -62,23 +81,29 @@ $foto = (!empty($l["foto"]))
                 <?= ($l['spesifikasi']); ?>
                 </p>
                 <!-- Tombol sewa -->
-                 <?php if (!isset($_SESSION['login'])): ?>
+                <?php if ($l['stok'] <= 0): ?>
 
-                      <!-- BELUM LOGIN -->
-                      <a href="redirect-login.php?id_laptop=<?= $id ?>&from=detail"
-                        class="btn btn-warning btn-lg mt-3 w-100">
-                          Sewa Sekarang
-                      </a>
+                <!-- STOK HABIS -->
+                <button class="btn btn-secondary btn-lg mt-3 w-100" disabled>
+                    Tidak Bisa Disewa (Stok Habis)
+                </button>
 
-                  <?php else: ?>
+            <?php else: ?>
 
-                      <!-- SUDAH LOGIN -->
-                      <a href="user/pesanan.php?id_laptop=<?= $id ?>"
-                        class="btn btn-warning btn-lg mt-3 w-100">
-                          Lanjutkan Sewa
-                      </a>
+                <?php if ($isLogin): ?>
+                    <a href="pesanan.php?id=<?= $l['id_laptop']; ?>"
+                    class="btn btn-success btn-lg mt-3 w-100">
+                        Lanjutkan Sewa
+                    </a>
+                <?php else: ?>
+                    <button class="btn btn-warning btn-lg mt-3 w-100"
+                            data-bs-toggle="modal"
+                            data-bs-target="#loginAlert">
+                        Sewa Sekarang
+                    </button>
+                <?php endif; ?>
 
-                  <?php endif; ?>
+            <?php endif; ?>
 
                 <a href="index.php" class="btn btn-secondary btn-lg mt-3 w-100">Kembali</a>
 
@@ -90,7 +115,7 @@ $foto = (!empty($l["foto"]))
 
 </div>
 
-<?php require "assets/footer.php"; ?>
+<?php require "../assets/footer.php"; ?>
 
 </body>
 </html>

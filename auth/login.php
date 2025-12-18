@@ -3,6 +3,16 @@ session_start();
 require "../functions.php";
 require "../config/database.php"; 
 
+// Simpan tujuan sebelum login
+if (isset($_GET['redirect'])) {
+    $_SESSION['redirect'] = $_GET['redirect'];
+
+    if (isset($_GET['id'])) {
+        $_SESSION['redirect_id'] = $_GET['id'];
+    }
+}
+
+
 // Jika user sudah login, cegah akses login
 if (isset($_SESSION["login"])) {
     if ($_SESSION["role"] == "admin") {
@@ -30,20 +40,31 @@ if (isset($_POST["login"])) {
         // Cek password (jika sudah pakai hash, gunakan password_verify)
         if ($pass === $user["password"]) {
 
+
+
             // Simpan session
             $_SESSION["login"]   = true;
             $_SESSION["id_user"] = $user["id_user"];
             $_SESSION["nama"]    = $user["nama"];
             $_SESSION["role"]    = $user["role"];
 
-            // Redirect sesuai role
-            if ($user["role"] == "admin") {
-                header("Location: ../admin/index.php");
-                exit;
-            } else {
-                header("Location: ../user/index.php");
+            // JIKA ADA TUJUAN DARI redirect-login.php
+            if (isset($_SESSION['redirect_to'])) {
+                $to = $_SESSION['redirect_to'];
+                unset($_SESSION['redirect_to']);
+                header("Location: ../$to");
                 exit;
             }
+
+            // DEFAULT
+            if ($user["role"] === "admin") {
+                header("Location: ../admin/index.php");
+            } else {
+                header("Location: ../user/index.php");
+            }
+            exit;
+
+
 
         } else {
             echo "<script>alert('Password salah!');</script>";

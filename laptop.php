@@ -75,7 +75,11 @@ $laptop = query("
                         </button>
                     <?php else: ?>
                         <!-- ✅ STOK ADA -->
-                        <button class="btn btn-warning btn-sm mt-2" data-bs-toggle="modal" data-bs-target="#loginAlert">Sewa Sekarang</button>
+                        <a href="redirect-login.php?id_laptop=<?= $l['id'] ?>&from=laptop"
+                          class="btn btn-warning btn-sm">
+                          Sewa Sekarang
+                        </a>
+
                     <?php endif; ?>
 
                 </div>
