@@ -40,7 +40,7 @@ $isLogin = isset($_SESSION['login']) && $_SESSION['login'] === true;
 <nav class="navbar navbar-expand-lg navbar-custom">
   <div class="container">
 
-    <a class="navbar-brand text-white" href="/Project_Rental_copy/index.php">
+    <a class="navbar-brand text-white" href="/Project_Rental/index.php">
       RENTAL LAPTOP
     </a>
 
@@ -48,29 +48,29 @@ $isLogin = isset($_SESSION['login']) && $_SESSION['login'] === true;
       <ul class="navbar-nav ms-auto align-items-center">
 
         <li class="nav-item">
-          <a class="nav-link" href="/Project_Rental_copy/index.php">Home</a>
+          <a class="nav-link" href="/Project_Rental/index.php">Home</a>
         </li>
 
         <li class="nav-item">
-          <a class="nav-link" href="/Project_Rental_copy/laptop.php">Laptop</a>
+          <a class="nav-link" href="/Project_Rental/laptop.php">Laptop</a>
         </li>
 
         <?php if ($isLogin): ?>
             <li class="nav-item">
-              <a class="nav-link" href="/Project_Rental_copy/user/pesanan-saya.php">Riwayat</a>
+              <a class="nav-link" href="/Project_Rental/user/pesanan-saya.php">Riwayat</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/Project_Rental_copy/user/pengembalian.php">Pengembalian</a>
+              <a class="nav-link" href="/Project_Rental/user/pengembalian.php">Pengembalian</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" href="/Project_Rental_copy/user/profil.php">Profil</a>
+              <a class="nav-link" href="/Project_Rental/user/profil.php">Profil</a>
             </li>
             <li class="nav-item ms-2">
-              <a class="btn btn-login" href="/Project_Rental_copy/auth/logout.php">Logout</a>
+              <a class="btn btn-login" href="/Project_Rental/auth/logout.php">Logout</a>
             </li>
         <?php else: ?>
             <li class="nav-item ms-2">
-              <a class="btn btn-login" href="/Project_Rental_copy/auth/login.php">Login</a>
+              <a class="btn btn-login" href="/Project_Rental/auth/login.php">Login</a>
             </li>
         <?php endif; ?>
 
