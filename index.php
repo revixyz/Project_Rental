@@ -29,7 +29,7 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
         /* HERO SECTION DENGAN BACKGROUND KOMPUTER ESTETIK */
         .hero {
             background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
-                        url('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
+url('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
             background-size: cover;
             background-position: center;
             background-attachment: fixed; /* Efek Parallax */

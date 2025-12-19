@@ -13,6 +13,17 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
 $id_user = $_SESSION["id_user"];
 
 /* =========================================
+   UPDATE STATUS JIKA SUDAH JATUH TEMPO
+========================================= */
+mysqli_query($conn, "
+    UPDATE tb_pesanan
+    SET status = 'Masa Sewa Berakhir'
+    WHERE id_user = '$id_user'
+    AND status = 'Disetujui'
+    AND DATE_ADD(tanggal_sewa, INTERVAL durasi DAY) < CURDATE()
+");
+
+/* =========================================
    PROSES AJUKAN PENGEMBALIAN
 ========================================= */
 if (isset($_POST['ajukan'])) {
@@ -63,7 +74,7 @@ $sql = "
     FROM tb_pesanan p
     JOIN tb_laptop l ON p.id_laptop = l.id_laptop
     WHERE p.id_user='$id_user'
-    AND p.status='Disetujui'
+    AND p.status IN ('Disetujui', 'Masa Sewa Berakhir')
     ORDER BY p.id_pesanan DESC
 ";
 $data = $conn->query($sql);
@@ -127,11 +138,22 @@ $data = $conn->query($sql);
                         <td><?= $p['durasi']; ?> hari</td>
                         <td><?= $jatuh_tempo; ?></td>
                         <td class="text-center">
-                            <span class="badge bg-success">Sedang Disewa</span>
+                            <?php if ($p['status'] == 'Masa Sewa Berakhir'): ?>
+                                <span class="badge bg-danger">Masa Sewa Berakhir</span>
+                            <?php else: ?>
+                                <span class="badge bg-success">Sedang Disewa</span>
+                            <?php endif; ?>
                         </td>
                         <td>
                             <form method="POST" onsubmit="return confirm('Yakin ingin mengajukan pengembalian?');">
                                 <input type="hidden" name="id_pesanan" value="<?= $p['id_pesanan']; ?>">
+
+                                <?php if ($p['status'] == 'Masa Sewa Berakhir'): ?>
+                                    <div class="text-danger small mb-1">
+                                        ⚠ Sudah jatuh tempo, denda akan dihitung admin
+                                    </div>
+                                <?php endif; ?>
+
                                 <button type="submit" name="ajukan" class="btn btn-warning btn-sm">
                                     Ajukan Pengembalian
                                 </button>

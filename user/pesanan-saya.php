@@ -118,6 +118,9 @@ $data = $conn->query($query);
                             case 'Dibatalkan':
                                 echo '<span class="badge bg-danger">Dibatalkan</span>';
                                 break;
+                            case 'Masa Sewa Berakhir':
+                                echo '<span class="badge bg-danger">Masa Sewa Berakhir</span>';
+                                break;
                             default:
                                 echo '<span class="badge bg-secondary">'.$p['status'].'</span>';
                         }

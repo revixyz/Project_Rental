@@ -88,7 +88,7 @@ $data = $conn->query($sql);
                         <?php if ($k['status'] == 'Disetujui'): ?>
                             <span class="badge bg-success">Disetujui</span>
                         <?php elseif ($k['status'] == 'Ditolak'): ?>
-                            <span class="badge bg-danger">Ditolak</span>
+                            <span class="badge bg-warning">Pending</span>
                         <?php else: ?>
                             <span class="badge bg-secondary"><?= $k['status']; ?></span>
                         <?php endif; ?>
