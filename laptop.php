@@ -2,7 +2,6 @@
 require "functions.php"; 
 require_once "config/database.php";
 
-// Ambil SEMUA data laptop (termasuk stok 0)
 $laptop = query("
     SELECT 
         id_laptop AS id,
@@ -36,14 +35,12 @@ $laptop = query("
         <div class="card mb-3 p-3 shadow-sm">
             <div class="row g-3 align-items-center">
 
-                <!-- FOTO LAPTOP -->
                 <div class="col-md-3">
                     <img src="assets/laptop/<?= htmlspecialchars($l['foto']); ?>"
                          class="img-fluid rounded"
                          style="height:180px;width:100%;object-fit:cover;">
                 </div>
 
-                <!-- DETAIL LAPTOP -->
                 <div class="col-md-9">
 
                     <h5 class="mb-1">
@@ -69,12 +66,12 @@ $laptop = query("
                     </p>
 
                     <?php if ($l['stok'] <= 0): ?>
-                        <!-- ❌ STOK HABIS -->
+
                         <button class="btn btn-secondary btn-sm mt-2" disabled>
                             Tidak Bisa Disewa
                         </button>
                     <?php else: ?>
-                        <!-- ✅ STOK ADA -->
+                        
                         <a href="redirect-login.php?id_laptop=<?= $l['id'] ?>&from=laptop"
                           class="btn btn-warning btn-sm">
                           Sewa Sekarang
@@ -94,7 +91,6 @@ $laptop = query("
 
 </body>
 
-<!-- MODAL LOGIN ALERT -->
 <div class="modal fade" id="loginAlert" tabindex="-1" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content shadow">

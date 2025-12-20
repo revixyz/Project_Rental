@@ -17,7 +17,6 @@ if (!isset($_GET['id'])) {
 
 $id = $_GET['id'];
 
-// Cegah admin menghapus dirinya sendiri
 if ($id == $_SESSION["id_user"]) {
     echo "<script>
             alert('Anda tidak dapat menghapus akun Anda sendiri!');

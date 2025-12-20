@@ -2,16 +2,8 @@
 require "../functions.php"; 
 require_once "../config/database.php";
 
-// Ambil SEMUA data laptop (termasuk stok 0)
-$laptop = query("
-    SELECT 
-        id_laptop AS id,
-        nama,
-        foto,
-        spesifikasi,
-        Harga AS harga_per_hari,
-        stok,
-        COALESCE(status, 'Tersedia') AS status
+$laptop = query("SELECT id_laptop AS id, nama, foto, spesifikasi, Harga AS harga_per_hari, stok,
+    COALESCE(status, 'Tersedia') AS status
     FROM tb_laptop
     ORDER BY stok DESC
 ");
@@ -35,15 +27,13 @@ $laptop = query("
 
         <div class="card mb-3 p-3 shadow-sm">
             <div class="row g-3 align-items-center">
-
-                <!-- FOTO LAPTOP -->
+\
                 <div class="col-md-3">
                     <img src="../assets/laptop/<?= htmlspecialchars($l['foto']); ?>"
                          class="img-fluid rounded"
                          style="height:180px;width:100%;object-fit:cover;">
                 </div>
 
-                <!-- DETAIL LAPTOP -->
                 <div class="col-md-9">
 
                     <h5 class="mb-1">
@@ -69,12 +59,12 @@ $laptop = query("
                     </p>
 
                     <?php if ($l['stok'] <= 0): ?>
-                        <!-- ❌ STOK HABIS -->
+                        
                         <button class="btn btn-secondary btn-sm mt-2" disabled>
                             Tidak Bisa Disewa
                         </button>
                     <?php else: ?>
-                        <!-- ✅ STOK ADA -->
+                        
                         <a href="pesanan.php?id_laptop=<?= $l['id']; ?>"
                            class="btn btn-primary btn-sm mt-2"
                            style="width:150px;">

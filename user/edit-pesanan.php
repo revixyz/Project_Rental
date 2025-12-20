@@ -2,9 +2,6 @@
 session_start();
 require "../config/database.php";
 
-// ========================
-// CEK LOGIN USER
-// ========================
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
     header("Location: ../auth/login.php");
     exit;
@@ -12,18 +9,12 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
 
 $id_user = $_SESSION["id_user"];
 
-// ========================
-// CEK ID PESANAN
-// ========================
 if (!isset($_GET['id'])) {
     die("ID pesanan tidak valid.");
 }
 
 $id_pesanan = intval($_GET['id']);
 
-// ========================
-// AMBIL DATA PESANAN + LAPTOP
-// ========================
 $query = mysqli_query($conn, "
     SELECT 
         p.id_pesanan,
@@ -44,9 +35,6 @@ if (mysqli_num_rows($query) == 0) {
 
 $p = mysqli_fetch_assoc($query);
 
-// ========================
-// BLOK EDIT JIKA SUDAH BAYAR
-// ========================
 if (
     $p['status'] != 'Menunggu Pembayaran' &&
     $p['status'] != 'Ditolak Pembayaran'
@@ -58,14 +46,11 @@ if (
     exit;
 }
 
-// ========================
-// PROSES SIMPAN EDIT
-// ========================
 if (isset($_POST['simpan'])) {
 
     $durasi = intval($_POST['durasi']);
 
-    // 🔒 VALIDASI DURASI (1–7 HARI)
+    // validasi durasi (1–7 hari)
     if ($durasi < 1 || $durasi > 7) {
         echo "<script>
             alert('Durasi sewa minimal 1 hari dan maksimal 7 hari!');
@@ -74,7 +59,6 @@ if (isset($_POST['simpan'])) {
         exit;
     }
 
-    // Hitung ulang total harga
     $total = $durasi * $p['harga_per_hari'];
 
     mysqli_query($conn, "

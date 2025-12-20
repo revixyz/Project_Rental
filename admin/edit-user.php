@@ -7,10 +7,8 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != "admin") {
     exit;
 }
 
-// Ambil ID user
 $id = $_GET["id"];
 
-// Ambil data user
 $user = query("SELECT * FROM tb_user WHERE id_user = $id")[0];
 
 // Proses update
@@ -21,7 +19,6 @@ if (isset($_POST["simpan"])) {
     $role  = $_POST["role"];
     $password = $_POST["password"];
 
-    // cek email duplikat kecuali email miliknya sendiri
     $cek = mysqli_query($conn, "SELECT * FROM tb_user WHERE email='$email' AND id_user != $id");
 
     if (mysqli_num_rows($cek) > 0) {
@@ -32,7 +29,7 @@ if (isset($_POST["simpan"])) {
         exit;
     }
 
-    // Jika password diisi → update password
+    // Jika password diisi, update password
     if (!empty($password)) {
         $pass_hash = password_hash($password, PASSWORD_DEFAULT);
         $query = "
@@ -44,7 +41,7 @@ if (isset($_POST["simpan"])) {
             WHERE id_user=$id
         ";
     } else {
-        // Jika password kosong → tidak update password
+        // Jika password kosong, tidak update password
         $query = "
             UPDATE tb_user SET 
                 nama='$nama',

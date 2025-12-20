@@ -2,17 +2,11 @@
 session_start();
 require "../config/database.php";
 
-/* =========================================
-   CEK LOGIN ADMIN
-========================================= */
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "admin") {
     header("Location: ../auth/login.php");
     exit;
 }
 
-/* =========================================
-   AMBIL RIWAYAT PENGEMBALIAN
-========================================= */
 $sql = "
     SELECT 
         k.id_pengembalian,

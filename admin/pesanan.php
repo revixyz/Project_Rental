@@ -2,17 +2,11 @@
 session_start();
 require "../config/database.php";
 
-// ==========================
-// CEK LOGIN ADMIN
-// ==========================
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "admin") {
     header("Location: ../auth/login.php");
     exit;
 }
 
-/* ==========================================================
-   PROSES SETUJUI / TOLAK PEMBAYARAN
-========================================================== */
 if (isset($_GET['aksi'], $_GET['id'])) {
 
     $id_pesanan = intval($_GET['id']);
@@ -58,9 +52,6 @@ if (isset($_GET['aksi'], $_GET['id'])) {
     exit;
 }
 
-/* ==========================================================
-   FILTER STATUS
-========================================================== */
 $status_filter = $_GET['status'] ?? '';
 $where = "";
 
@@ -69,9 +60,6 @@ if (!empty($status_filter)) {
     $where = "WHERE tb_pesanan.status = '$status_filter'";
 }
 
-/* ==========================================================
-   AMBIL DATA PESANAN
-========================================================== */
 $data = $conn->query("
     SELECT 
         tb_pesanan.*,
@@ -99,14 +87,12 @@ $data = $conn->query("
 <div class="container mt-5">
     <h3 class="mb-3">Kelola Pesanan User</h3>
 
-    <!-- PESAN NOTIFIKASI -->
     <?php if (isset($_SESSION['pesan'])): ?>
         <div class="alert alert-info">
             <?= $_SESSION['pesan']; unset($_SESSION['pesan']); ?>
         </div>
     <?php endif; ?>
 
-    <!-- FILTER STATUS -->
     <form method="GET" class="row g-2 mb-3">
         <div class="col-md-4">
             <select name="status" class="form-select" onchange="this.form.submit()">
@@ -141,7 +127,6 @@ $data = $conn->query("
         </div>
     <?php endif; ?>
 
-    <!-- TABEL -->
     <div class="table-responsive">
         <table class="table table-bordered table-striped align-middle">
             <thead class="table-dark">

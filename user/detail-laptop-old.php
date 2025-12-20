@@ -3,14 +3,11 @@ session_start();
 require "../functions.php";
 require_once "../config/database.php";
 
-
-// Proteksi halaman
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
     header("Location: ../auth/login.php");
     exit;
 }
 
-// Pastikan ada ID laptop
 if (!isset($_GET["id"])) {
     header("Location: index.php");
     exit;
@@ -21,7 +18,6 @@ $isLogin = isset($_SESSION["login"]) && $_SESSION["role"] == "user";
 
 $id = intval($_GET["id"]);
 
-// Ambil data laptop
 $laptop = query("
     SELECT 
         id_laptop,
@@ -63,12 +59,10 @@ $foto = (!empty($l["foto"]))
     <div class="card shadow-lg p-4">
         <div class="row">
             
-            <!-- FOTO -->
             <div class="col-md-5 text-center">
                 <img src="<?= $foto; ?>" class="img-fluid rounded" style="max-height: 300px; object-fit: cover;">
             </div>
 
-            <!-- DETAIL -->
             <div class="col-md-7">
                 <h2><?= $l["nama"]; ?></h2>
                 
@@ -80,10 +74,8 @@ $foto = (!empty($l["foto"]))
                 <p><strong>Spesifikasi:</strong>
                 <?= ($l['spesifikasi']); ?>
                 </p>
-                <!-- Tombol sewa -->
                 <?php if ($l['stok'] <= 0): ?>
 
-                <!-- STOK HABIS -->
                 <button class="btn btn-secondary btn-lg mt-3 w-100" disabled>
                     Tidak Bisa Disewa (Stok Habis)
                 </button>

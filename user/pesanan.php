@@ -3,7 +3,6 @@ session_start();
 require "../functions.php";
 require "../config/database.php";
 
-// Cek login user
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
     header("Location: ../auth/login.php");
     exit;
@@ -11,7 +10,6 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
 
 $id_user = $_SESSION["id_user"];
 
-// Cek id laptop
 if (!isset($_GET['id_laptop'])) {
     echo "<script>alert('Laptop tidak ditemukan!'); window.location='index.php';</script>";
     exit;
@@ -19,7 +17,6 @@ if (!isset($_GET['id_laptop'])) {
 
 $id_laptop = intval($_GET['id_laptop']);
 
-// Ambil detail laptop
 $laptop = query("
     SELECT id_laptop, nama, harga AS harga_per_hari, stok
     FROM tb_laptop
@@ -33,9 +30,6 @@ if (!$laptop || count($laptop) == 0) {
 
 $l = $laptop[0];
 
-// ==============================
-// PROSES SIMPAN PESANAN
-// ==============================
 if (isset($_POST['pesan'])) {
 
     $tanggal_sewa = $_POST['tanggal_sewa'];
@@ -43,7 +37,6 @@ if (isset($_POST['pesan'])) {
     $harga = floatval($l['harga_per_hari']);
     $total_harga = $harga * $durasi;
 
-    // VALIDASI TANGGAL (BACKEND)
     $today = date('Y-m-d');
     if ($tanggal_sewa < $today) {
         echo "<script>
@@ -53,7 +46,6 @@ if (isset($_POST['pesan'])) {
         exit;
     }
 
-    // VALIDASI DURASI (1–7 HARI)
     if ($durasi < 1 || $durasi > 7) {
         echo "<script>
             alert('Durasi sewa maksimal 7 hari!');
@@ -73,7 +65,6 @@ if (isset($_POST['pesan'])) {
 
     if (mysqli_query($conn, $query)) {
 
-        // Kurangi stok
         mysqli_query($conn, "
             UPDATE tb_laptop 
             SET stok = stok - 1 
@@ -117,7 +108,6 @@ if (isset($_POST['pesan'])) {
 
         <form method="POST">
 
-            <!-- TANGGAL SEWA -->
             <label class="form-label">Tanggal Sewa</label>
             <input type="date"
                    id="tanggal_sewa"
@@ -127,7 +117,6 @@ if (isset($_POST['pesan'])) {
                    value="<?= date('Y-m-d'); ?>"
                    required>
 
-            <!-- DURASI -->
             <label class="form-label mt-3">
                 Durasi (hari) <small class="text-muted">(Maksimal 7 hari)</small>
             </label>
@@ -149,7 +138,6 @@ if (isset($_POST['pesan'])) {
     </div>
 </div>
 
-<!-- 🔒 JS: MATIKAN KETIK MANUAL DI DATE -->
 <script>
     const tanggalInput = document.getElementById('tanggal_sewa');
 

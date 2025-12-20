@@ -3,7 +3,6 @@ session_start();
 require "functions.php";
 require_once "config/database.php";
 
-// Ambil data laptop
 $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
 ?>
 
@@ -26,13 +25,12 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
             background-color: #f8f9fa;
         }
 
-        /* HERO SECTION DENGAN BACKGROUND KOMPUTER ESTETIK */
         .hero {
             background: linear-gradient(rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.65)), 
 url('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Efek Parallax */
+            background-attachment: fixed; 
             padding: 150px 0;
             color: white;
             text-align: center;
@@ -70,7 +68,6 @@ url('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3
             transform: translateY(-5px);
         }
 
-        /* STYLING CARD LAPTOP */
         .card-laptop {
             border: none;
             border-radius: 15px;
@@ -167,7 +164,7 @@ url('https://images.unsplash.com/photo-1499951360447-b19be8fe80f5?ixlib=rb-4.0.3
         <?php if (count($getLaptop) > 0): ?>
             <?php foreach ($getLaptop as $l): ?>
                 <?php 
-                    // Tentukan foto
+                
                     $foto = (!empty($l["foto"])) 
                             ? "assets/laptop/" . $l["foto"] 
                             : "assets/img/default-150x150.png";

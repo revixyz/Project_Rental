@@ -9,19 +9,14 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
 
 $id_user = $_SESSION["id_user"];
 
-// Ambil data user
 $user = mysqli_fetch_assoc(mysqli_query($conn, "SELECT * FROM tb_user WHERE id_user='$id_user'"));
 
-/* ===========================================================
-   PROSES UPDATE PROFIL
-=========================================================== */
 if (isset($_POST["simpan"])) {
 
     $nama   = $_POST["nama"];
     $email  = $_POST["email"];
     $pass   = $_POST["password"];
 
-    // Jika password baru kosong → tetap gunakan password lama
     if ($pass == "") {
         $passBaru = $user["password"];
     } else {
@@ -29,7 +24,6 @@ if (isset($_POST["simpan"])) {
         $passBaru = password_hash($pass, PASSWORD_DEFAULT);
     }
 
-    // Update ke database
     mysqli_query($conn, "
         UPDATE tb_user 
         SET nama='$nama', email='$email', password='$passBaru'
@@ -76,19 +70,16 @@ if (isset($_POST["simpan"])) {
 
                     <form method="post">
 
-                        <!-- NAMA -->
                         <div class="mb-3">
                             <label class="form-label">Nama Lengkap</label>
                             <input type="text" name="nama" class="form-control" value="<?= $user['nama']; ?>" required>
                         </div>
 
-                        <!-- EMAIL -->
                         <div class="mb-3">
                             <label class="form-label">Email</label>
                             <input type="email" name="email" class="form-control" value="<?= $user['email']; ?>" required>
                         </div>
 
-                        <!-- PASSWORD -->
                         <div class="mb-3">
                             <label class="form-label">Password Baru (Opsional)</label>
                             <input type="password" name="password" class="form-control" placeholder="Biarkan kosong jika tidak ganti password">

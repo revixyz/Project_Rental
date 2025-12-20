@@ -3,13 +3,11 @@ session_start();
 require "../functions.php";
 require_once "../config/database.php";
 
-// Proteksi halaman
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
     header("Location: ../auth/login.php");
     exit;
 }
 
-// Ambil data laptop
 $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
 ?>
 
@@ -27,12 +25,10 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
 
 <?php require "../assets/user-header.php"; ?>
 
-<!-- SELAMAT DATANG -->
 <div class="container mt-5">
     
 </div>
 
-<!-- HERO SECTION  -->
 <div class="hero">
     <div class="container">
         <h3 class="mb-3">Selamat Datang <?= $_SESSION["nama"]; ?>👋</h3>
@@ -44,7 +40,6 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
 <br><br>
 
 
-<!-- FITUR -->
 <div class="container mt-4">
     <h3 class="section-title text-center">Kenapa Memilih Kami?</h3>
     <div class="row text-center">
@@ -69,7 +64,6 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
     </div>
 </div>
 
-<!-- PRODUK (DATA LAPTOP) -->
 <div class="container mt-5" id="produk">
     <h3 class="section-title text-center">Daftar Laptop Tersedia</h3>
 
@@ -77,7 +71,7 @@ $getLaptop = query("SELECT * FROM tb_laptop ORDER BY id_laptop DESC");
         <?php if (count($getLaptop) > 0): ?>
             <?php foreach ($getLaptop as $l): ?>
                 <?php 
-                    // Tentukan foto
+                    
                     $foto = (!empty($l["foto"])) 
                                 ? "../assets/laptop/" . $l["foto"] 
                                 : "../assets/img/default-150x150.png";

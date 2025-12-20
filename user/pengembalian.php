@@ -2,9 +2,6 @@
 session_start();
 require "../config/database.php";
 
-/* =========================================
-   CEK LOGIN USER
-========================================= */
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
     header("Location: ../auth/login.php");
     exit;
@@ -12,9 +9,6 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
 
 $id_user = $_SESSION["id_user"];
 
-/* =========================================
-   UPDATE STATUS JIKA SUDAH JATUH TEMPO
-========================================= */
 mysqli_query($conn, "
     UPDATE tb_pesanan
     SET status = 'Masa Sewa Berakhir'
@@ -23,15 +17,11 @@ mysqli_query($conn, "
     AND DATE_ADD(tanggal_sewa, INTERVAL durasi DAY) < CURDATE()
 ");
 
-/* =========================================
-   PROSES AJUKAN PENGEMBALIAN
-========================================= */
 if (isset($_POST['ajukan'])) {
 
     $id_pesanan = $_POST['id_pesanan'];
     $tanggal_kembali = date('Y-m-d');
 
-    // Cegah pengajuan ganda
     $cek = mysqli_query($conn, "
         SELECT * FROM tb_pengembalian 
         WHERE id_pesanan='$id_pesanan'
@@ -39,13 +29,11 @@ if (isset($_POST['ajukan'])) {
 
     if (mysqli_num_rows($cek) == 0) {
 
-        // Insert pengembalian (TANPA denda & kondisi)
         mysqli_query($conn, "
             INSERT INTO tb_pengembalian (id_pesanan, tanggal_kembali, status)
             VALUES ('$id_pesanan', '$tanggal_kembali', 'Pending')
         ");
 
-        // Update status pesanan
         mysqli_query($conn, "
             UPDATE tb_pesanan 
             SET status='Menunggu Pengembalian'
@@ -61,9 +49,6 @@ if (isset($_POST['ajukan'])) {
     exit;
 }
 
-/* =========================================
-   AMBIL PESANAN AKTIF USER
-========================================= */
 $sql = "
     SELECT 
         p.id_pesanan,

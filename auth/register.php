@@ -13,18 +13,15 @@ if (isset($_POST["register"])) {
     $password = htmlspecialchars($_POST["password"]);
     $confirm  = htmlspecialchars($_POST["confirm"]);
 
-    // ---- VALIDASI ----
     if ($password !== $confirm) {
         $error = "Password dan Konfirmasi Password tidak sama!";
     } else {
 
-        // Cek apakah email sudah digunakan
         $cek = query("SELECT * FROM tb_user WHERE email='$email'");
         if ($cek) {
             $error = "Email sudah terdaftar! Silakan gunakan email lain.";
         } else {
 
-            // Insert user baru
             $insert = mysqli_query($conn, "
                 INSERT INTO tb_user (nama, email, password, role)
                 VALUES ('$nama', '$email', '$password', 'user')
@@ -100,12 +97,10 @@ if (isset($_POST["register"])) {
 
     <h3 class="text-center register-title mb-4">Buat Akun Baru</h3>
 
-    <!-- Pesan Sukses -->
     <?php if ($success): ?>
         <div class="alert alert-success"><?= $success; ?></div>
     <?php endif; ?>
 
-    <!-- Pesan Error -->
     <?php if ($error): ?>
         <div class="alert alert-danger"><?= $error; ?></div>
     <?php endif; ?>

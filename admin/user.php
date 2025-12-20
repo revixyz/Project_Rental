@@ -22,9 +22,6 @@ $user_list  = query("SELECT * FROM tb_user WHERE role='user' ORDER BY id_user DE
 
     <a href="tambah-user.php" class="btn btn-primary mb-3">Tambah User / Admin</a>
 
-    <!-- ========================
-         TABEL ADMIN
-    ========================= -->
     <h4 class="mt-4">Daftar Admin</h4>
     <div class="table-responsive">
         <table class="table table-bordered table-striped align-middle">
@@ -61,9 +58,6 @@ $user_list  = query("SELECT * FROM tb_user WHERE role='user' ORDER BY id_user DE
     </div>
 
 
-    <!-- ========================
-         TABEL USER
-    ========================= -->
     <h4 class="mt-4">Daftar User</h4>
     <div class="table-responsive">
         <table class="table table-bordered table-striped align-middle">

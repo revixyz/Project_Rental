@@ -7,23 +7,16 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
     exit;
 }
 
-// Ambil ID pesanan
 if (!isset($_GET['id'])) {
     die("ID pesanan tidak valid.");
 }
 $id_pesanan = intval($_GET['id']);
 
-// ========================
-// PROSES UPLOAD
-// ========================
 if (isset($_POST['upload'])) {
 
     $metode   = $_POST['metode'];
     $rekening = $_POST['rekening'];
 
-    // ========================
-    // VALIDASI FILE
-    // ========================
     $file = $_FILES['bukti'];
 
     $allowed_ext  = ['jpg', 'jpeg', 'png'];
@@ -36,13 +29,13 @@ if (isset($_POST['upload'])) {
 
     $ext = strtolower(pathinfo($file_name, PATHINFO_EXTENSION));
 
-    // ❌ Error upload
+    //Error upload
     if ($file_err !== 0) {
         echo "<script>alert('Gagal upload file!'); window.history.back();</script>";
         exit;
     }
 
-    // ❌ Bukan JPG / PNG
+    //Bukan JPG / PNG
     if (!in_array($ext, $allowed_ext)) {
         echo "<script>
             alert('Bukti pembayaran hanya boleh JPG atau PNG!');
@@ -51,7 +44,7 @@ if (isset($_POST['upload'])) {
         exit;
     }
 
-    // ❌ Ukuran terlalu besar
+    //Ukuran terlalu besar
     if ($file_size > $max_size) {
         echo "<script>
             alert('Ukuran file maksimal 2MB!');
@@ -60,17 +53,11 @@ if (isset($_POST['upload'])) {
         exit;
     }
 
-    // ========================
-    // SIMPAN FILE
-    // ========================
     $new_name = 'bukti_' . $id_pesanan . '_' . time() . '.' . $ext;
     $folder = "../assets/uploads/" . $new_name;
 
     move_uploaded_file($file_tmp, $folder);
 
-    // ========================
-    // UPDATE DATABASE
-    // ========================
     $status = "Menunggu Konfirmasi";
 
 mysqli_query($conn, "
@@ -107,7 +94,6 @@ exit;
 
     <form method="POST" enctype="multipart/form-data">
 
-        <!-- METODE -->
         <div class="mb-3">
             <label class="form-label">Metode Pembayaran</label>
             <select name="metode" id="metode" class="form-select" required onchange="showRekening()">
@@ -119,7 +105,6 @@ exit;
             </select>
         </div>
 
-        <!-- REKENING -->
         <div class="mb-3" id="rekeningBox" style="display:none;">
             <label class="form-label">Nomor Rekening Tujuan</label>
             <div class="input-group">
@@ -128,7 +113,6 @@ exit;
             </div>
         </div>
 
-        <!-- UPLOAD -->
         <div class="mb-3">
             <label class="form-label">Upload Bukti Pembayaran</label>
             <input type="file"

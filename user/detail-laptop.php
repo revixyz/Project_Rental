@@ -3,13 +3,11 @@ session_start();
 require "../functions.php";
 require_once "../config/database.php";
 
-// Proteksi halaman
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
     header("Location: ../auth/login.php");
     exit;
 }
 
-// Pastikan ada ID laptop
 if (!isset($_GET["id"])) {
     header("Location: index.php");
     exit;
@@ -17,19 +15,7 @@ if (!isset($_GET["id"])) {
 
 $id = intval($_GET["id"]);
 
-// Ambil data laptop
-$laptop = query("
-    SELECT 
-        id_laptop,
-        nama,
-        harga,
-        spesifikasi,
-        foto,
-        stok
-    FROM tb_laptop
-    WHERE id_laptop = $id
-");
-
+$laptop = query("SELECT id_laptop, nama, harga, spesifikasi, foto, stok FROM tb_laptop WHERE id_laptop = $id");
 
 if (!$laptop || count($laptop) == 0) {
     echo "<script>alert('Laptop tidak ditemukan'); window.location='index.php';</script>";
@@ -59,12 +45,10 @@ $foto = (!empty($l["foto"]))
     <div class="card shadow-lg p-4">
         <div class="row">
             
-            <!-- FOTO -->
             <div class="col-md-5 text-center">
                 <img src="<?= $foto; ?>" class="img-fluid rounded" style="max-height: 300px; object-fit: cover;">
             </div>
 
-            <!-- DETAIL -->
             <div class="col-md-7">
                 <h2><?= $l["nama"]; ?></h2>
                 
@@ -76,17 +60,14 @@ $foto = (!empty($l["foto"]))
                 <p><strong>Spesifikasi:</strong>
                 <?= ($l['spesifikasi']); ?>
                 </p>
-                <!-- Tombol sewa -->
                 <?php if ($l['stok'] <= 0): ?>
 
-                <!-- STOK HABIS -->
                 <button class="btn btn-secondary btn-lg mt-3 w-100" disabled>
                     Tidak Bisa Disewa (Stok Habis)
                 </button>
 
             <?php else: ?>
 
-                <!-- STOK TERSEDIA -->
                 <a href="pesanan.php?id_laptop=<?= $l['id_laptop']; ?>"
                 class="btn btn-primary btn-lg mt-3 w-100">
                 Sewa Sekarang

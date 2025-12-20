@@ -37,7 +37,7 @@ if (isset($_POST["login"])) {
 
         $user = $data[0];
 
-        // Cek password (jika sudah pakai hash, gunakan password_verify)
+        // Cek password 
         if ($pass === $user["password"]) {
 
 
@@ -48,7 +48,6 @@ if (isset($_POST["login"])) {
             $_SESSION["nama"]    = $user["nama"];
             $_SESSION["role"]    = $user["role"];
 
-            // JIKA ADA TUJUAN DARI redirect-login.php
             if (isset($_SESSION['redirect_to'])) {
                 $to = $_SESSION['redirect_to'];
                 unset($_SESSION['redirect_to']);
@@ -56,7 +55,6 @@ if (isset($_POST["login"])) {
                 exit;
             }
 
-            // DEFAULT
             if ($user["role"] === "admin") {
                 header("Location: ../admin/index.php");
             } else {

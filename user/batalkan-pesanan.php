@@ -16,9 +16,6 @@ if (!isset($_GET['id'])) {
 
 $id_pesanan = intval($_GET['id']);
 
-/* ============================
-   AMBIL DATA PESANAN
-============================ */
 $data = mysqli_query($conn, "
     SELECT id_laptop, status 
     FROM tb_pesanan 
@@ -38,18 +35,12 @@ if ($p['status'] != 'Menunggu Pembayaran') {
     exit;
 }
 
-/* ============================
-   UPDATE STATUS PESANAN
-============================ */
 mysqli_query($conn, "
     UPDATE tb_pesanan 
     SET status = 'Dibatalkan' 
     WHERE id_pesanan = $id_pesanan
 ");
 
-/* ============================
-   KEMBALIKAN STOK LAPTOP
-============================ */
 mysqli_query($conn, "
     UPDATE tb_laptop 
     SET stok = stok + 1 

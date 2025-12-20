@@ -28,7 +28,6 @@ $data = query("SELECT * FROM tb_laptop");
     <tr>
       <td class="text-center"><?= $no++; ?></td>
 
-      <!-- Gambar Laptop -->
       <td class="text-center">
         <img src="../assets/laptop/<?= $d['foto']; ?>"
              alt="<?= $d['nama']; ?>"
@@ -38,13 +37,13 @@ $data = query("SELECT * FROM tb_laptop");
 
       <td><?= $d["nama"]; ?></td>
 
-      <!-- Spesifikasi -->
+   
       <td style="white-space: pre-line;"><?= $d["spesifikasi"]; ?></td>
 
       <td class="text-center"><?= $d["stok"]; ?></td>
       <td>Rp <?= number_format($d["harga"]); ?></td>
 
-      <!-- Tombol Aksi -->
+     
       <td class="text-center">
 
     <div class="d-flex justify-content-center gap-2">

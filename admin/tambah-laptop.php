@@ -9,30 +9,24 @@ if (isset($_POST["simpan"])) {
     $spesifikasi = $_POST["spesifikasi"];
     $harga  = $_POST["harga"];
 
-    // === Upload Foto ===
     $namaFile = $_FILES['foto']['name'];
     $tmpName  = $_FILES['foto']['tmp_name'];
     $error    = $_FILES['foto']['error'];
 
-    // Folder untuk menyimpan gambar laptop
     $folder = "../assets/laptop/";
 
-    // Buat folder jika belum ada
     if (!file_exists($folder)) {
         mkdir($folder, 0777, true);
     }
 
-    // Jika foto diupload
     if ($error === 0) {
-        // Beri nama unik agar tidak bentrok
         $namaBaru = time() . "_" . $namaFile;
 
         move_uploaded_file($tmpName, $folder . $namaBaru);
     } else {
-        $namaBaru = null; // jika tidak ada foto
+        $namaBaru = null; 
     }
 
-    // === Simpan ke Database ===
     $query = "INSERT INTO tb_laptop (nama, foto, spesifikasi, harga, stok)
           VALUES ('$nama', '$namaBaru', '$spesifikasi', '$harga', '$stok')";
 

@@ -2,13 +2,11 @@
 session_start();
 require "../functions.php";
 
-// Proteksi halaman admin
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "admin") {
     header("Location: ../auth/login.php");
     exit;
 }
 
-//baru boleh panggil header setelah lolos cek
 require "../assets/header.php"; 
 
 // Query data
@@ -61,7 +59,6 @@ $totalUser    = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM tb_user"));
     <p>Kelola semua aktivitas rental laptop melalui dashboard ini.</p>
 </div>
 
-<!-- STATISTIC CARDS -->
 <div class="row mb-4">
   
   <div class="col-md-4 mb-3">
@@ -87,7 +84,6 @@ $totalUser    = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM tb_user"));
 
 </div>
 
-<!-- QUICK ACTIONS -->
 <div class="card shadow p-4 mb-5">
   <h4 class="mb-3 fw-bold">Aksi Cepat</h4>
   <div class="row quick-actions g-3">
@@ -113,5 +109,3 @@ $totalUser    = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM tb_user"));
   </div>
 </div>
 
-<!-- FOOTER -->
-<?php require "../assets/footer.php"; ?>

@@ -9,9 +9,6 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != "admin") {
 
 $tarif_denda = 20000; // denda per hari
 
-/* =====================================================
-   PROSES SETUJUI PENGEMBALIAN (AUTO HITUNG DENDA)
-===================================================== */
 if (isset($_POST['setujui'])) {
 
     $id_pesanan      = $_POST['id_pesanan'];
@@ -66,9 +63,6 @@ if (isset($_POST['setujui'])) {
     exit;
 }
 
-/* =====================================================
-   AMBIL DATA PESANAN MENUNGGU PENGEMBALIAN
-===================================================== */
 $sql = "
     SELECT 
         p.id_pesanan,
@@ -153,9 +147,8 @@ if ($data->num_rows == 0): ?>
 </tr>
 
 <?php
-/* =====================================================
-   MODAL PROSES PENGEMBALIAN (ADMIN)
-===================================================== */
+
+//modal
 $modal_list .= '
 <div class="modal fade" id="'.$modal_id.'" tabindex="-1">
     <div class="modal-dialog">

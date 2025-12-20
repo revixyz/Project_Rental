@@ -3,9 +3,6 @@ session_start();
 require "../functions.php";
 require "../config/database.php";
 
-/* =========================================
-   CEK LOGIN USER
-========================================= */
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
     header("Location: ../auth/login.php");
     exit;
@@ -13,9 +10,6 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
 
 $id_user = $_SESSION["id_user"];
 
-/* =========================================
-   AMBIL RIWAYAT PESANAN USER
-========================================= */
 $query = "
     SELECT 
         p.id_pesanan,
@@ -93,7 +87,6 @@ $data = $conn->query($query);
 
                     <td>Rp<?= number_format($p['total_harga']); ?></td>
 
-                    <!-- STATUS -->
                     <td class="text-center">
                         <?php
                         switch ($p['status']) {
@@ -127,10 +120,8 @@ $data = $conn->query($query);
                         ?>
                     </td>
 
-                    <!-- BUKTI PEMBAYARAN -->
                     <td class="text-center">
 
-                        <!-- TAMPILKAN BUKTI JIKA ADA -->
                         <?php if (!empty($p['bukti'])): ?>
                             <a href="../assets/uploads/<?= $p['bukti']; ?>" target="_blank">
                                 <img src="../assets/uploads/<?= $p['bukti']; ?>"
@@ -139,7 +130,6 @@ $data = $conn->query($query);
                             </a>
                         <?php endif; ?>
 
-                        <!-- TOMBOL UPLOAD / UPLOAD ULANG -->
                         <?php if (
                             $p['status'] == 'Menunggu Pembayaran' ||
                             $p['status'] == 'Ditolak Pembayaran' ||
@@ -164,7 +154,6 @@ $data = $conn->query($query);
 
                     </td>
 
-                    <!-- EDIT DURASI -->
                     <td>
                         <?php if ($p['status'] == 'Menunggu Pembayaran'): ?>
 

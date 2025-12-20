@@ -3,16 +3,13 @@ session_start();
 require "../functions.php";
 require "../config/database.php";
 
-// Proteksi halaman: hanya user yang login
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "user") {
     header("Location: ../auth/login.php");
     exit;
 }
 
-// Ambil ID user dari session
 $id_user = $_SESSION["id_user"];
 
-// Ambil data user
 $user = query("SELECT * FROM tb_user WHERE id_user = $id_user LIMIT 1");
 
 if (!$user) {
@@ -73,21 +70,18 @@ $user = $user[0];
 
 <body style="background: #f4f6f9;">
 
-    <!-- Header User -->
     <?php require "../assets/user-header.php"; ?>
 
     <div class="container mt-5">
 
         <div class="profile-card">
 
-            <!-- Header Profil -->
             <div class="profile-header">
                 <i><h1>WELCOME</h1></i>
                 <h4><?= htmlspecialchars($user["nama"]); ?></h4>
                 <span class="badge bg-primary"><?= htmlspecialchars($user["role"]); ?></span>
             </div>
 
-            <!-- Detail User -->
             <div class="p-4 bg-white">
 
                 <h5 class="mb-3">Informasi Akun</h5>

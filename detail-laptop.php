@@ -3,9 +3,6 @@ session_start();
 require "functions.php";
 require_once "config/database.php";
 
-
-
-// Pastikan ada ID laptop
 if (!isset($_GET["id"])) {
     header("Location: index.php");
     exit;
@@ -13,7 +10,6 @@ if (!isset($_GET["id"])) {
 
 $id = intval($_GET["id"]);
 
-// Ambil data laptop berdasarkan ID
 $laptop = query("SELECT * FROM tb_laptop WHERE id_laptop = $id");
 
 if (!$laptop || count($laptop) == 0) {
@@ -23,7 +19,6 @@ if (!$laptop || count($laptop) == 0) {
 
 $l = $laptop[0];
 
-// Cek foto
 $foto = (!empty($l["foto"])) 
         ? "assets/laptop/" . $l["foto"]
         : "assets/img/default-150x150.png";
@@ -44,12 +39,10 @@ $foto = (!empty($l["foto"]))
     <div class="card shadow-lg p-4">
         <div class="row">
             
-            <!-- FOTO -->
             <div class="col-md-5 text-center">
                 <img src="<?= $foto; ?>" class="img-fluid rounded" style="max-height: 300px; object-fit: cover;">
             </div>
 
-            <!-- DETAIL -->
             <div class="col-md-7">
                 <h2><?= $l["nama"]; ?></h2>
                 
@@ -61,10 +54,9 @@ $foto = (!empty($l["foto"]))
                 <p><strong>Spesifikasi:</strong>
                 <?= ($l['spesifikasi']); ?>
                 </p>
-                <!-- Tombol sewa -->
+                
                  <?php if (!isset($_SESSION['login'])): ?>
 
-                      <!-- BELUM LOGIN -->
                       <a href="redirect-login.php?id_laptop=<?= $id ?>&from=detail"
                         class="btn btn-warning btn-lg mt-3 w-100">
                           Sewa Sekarang
@@ -72,7 +64,6 @@ $foto = (!empty($l["foto"]))
 
                   <?php else: ?>
 
-                      <!-- SUDAH LOGIN -->
                       <a href="user/pesanan.php?id_laptop=<?= $id ?>"
                         class="btn btn-warning btn-lg mt-3 w-100">
                           Lanjutkan Sewa

@@ -1,6 +1,7 @@
 <?php
 session_start();
-require "../functions.php"; 
+require "../functions.php";
+
 
 if (!isset($_SESSION["login"]) || $_SESSION["role"] != "admin") {
     header("Location: ../auth/login.php");
@@ -10,6 +11,7 @@ if (!isset($_SESSION["login"]) || $_SESSION["role"] != "admin") {
 $bulan_filter = isset($_GET['bulan']) ? $_GET['bulan'] : date('m');
 $tahun_filter = isset($_GET['tahun']) ? $_GET['tahun'] : date('Y');
 
+//detail transaksi bulanan
 $sql_detail = "SELECT 
                 p.tanggal_sewa, 
                 u.nama AS nama_user, 
@@ -26,6 +28,7 @@ $sql_detail = "SELECT
                ORDER BY p.tanggal_sewa ASC";
 $result_detail = $conn->query($sql_detail);
 
+//ringkasan tahunan
 $sql_tahunan = "SELECT 
                 SUM(p.total_harga) AS total_sewa_tahun, 
                 SUM(IFNULL(pg.denda, 0)) AS total_denda_tahun
@@ -35,7 +38,7 @@ $sql_tahunan = "SELECT
                 AND YEAR(p.tanggal_sewa) = '$tahun_filter'";
 $result_tahunan = $conn->query($sql_tahunan)->fetch_assoc();
 
-$total_sewa_thn = $result_tahunan['total_sewa_tahun'] ?? 0;
+$total_sewa_thn  = $result_tahunan['total_sewa_tahun'] ?? 0;
 $total_denda_thn = $result_tahunan['total_denda_tahun'] ?? 0;
 $grand_total_thn = $total_sewa_thn + $total_denda_thn;
 ?>
@@ -44,69 +47,32 @@ $grand_total_thn = $total_sewa_thn + $total_denda_thn;
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <title>Admin - Laporan Keuangan Terperinci</title>
+    <title>Cetak Laporan Keuangan</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-        .filter-card, .table-container, .summary-card {
+        body { font-size: 12px; }
+        .table-container, .summary-card {
             border: 1px solid #dee2e6;
-            border-radius: 0; 
+            border-radius: 0;
         }
         .table-striped > tbody > tr:nth-of-type(odd) {
-            background-color: rgba(0,0,0,.03); 
+            background-color: rgba(0,0,0,.03);
+        }
+        @media print {
+            .no-print { display: none !important; }
+            body { margin: 0; }
         }
     </style>
 </head>
-<body>
+<body onload="window.print()">
 
-<?php require "../assets/header.php"; ?>
+<div class="container mt-4 mb-4">
+    <h4 class="text-center mb-1">LAPORAN KEUANGAN RENTAL LAPTOP</h4>
+    <p class="text-center mb-4">
+        Periode: <strong><?= date('F', mktime(0,0,0,$bulan_filter,1)); ?> <?= $tahun_filter ?></strong>
+    </p>
 
-<div class="container mt-5 mb-5">
-    <h3 class="mb-4">Laporan Keuangan Detail</h3>
-
-    <div class="card filter-card shadow-sm mb-4">
-        <div class="card-body">
-            <form method="GET" class="row g-3 align-items-end">
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Bulan</label>
-                    <select name="bulan" class="form-select">
-                        <?php
-                        $nama_bulan = [
-                            '01'=>'Januari', '02'=>'Februari', '03'=>'Maret', '04'=>'April', 
-                            '05'=>'Mei', '06'=>'Juni', '07'=>'Juli', '08'=>'Agustus', 
-                            '09'=>'September', '10'=>'Oktober', '11'=>'November', '12'=>'Desember'
-                        ];
-                        foreach ($nama_bulan as $key => $val) {
-                            $sel = ($key == $bulan_filter) ? 'selected' : '';
-                            echo "<option value='$key' $sel>$val</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label fw-bold">Tahun</label>
-                    <select name="tahun" class="form-select">
-                        <?php 
-                        for($i = date('Y'); $i >= 2023; $i--){
-                            $sel = ($i == $tahun_filter) ? 'selected' : '';
-                            echo "<option value='$i' $sel>$i</option>";
-                        }
-                        ?>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <a href="cetak-laporan.php?bulan=<?= $bulan_filter ?>&tahun=<?= $tahun_filter ?>" 
-                    target="_blank" 
-                    class="btn btn-warning w-100">
-                    Cetak Laporan
-                    </a><p></p>
-
-                    <button type="submit" class="btn btn-dark w-100">Tampilkan Laporan</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <div class="table-responsive table-container shadow-sm mb-4">
+    <div class="table-responsive table-container mb-4">
         <table class="table table-bordered table-striped align-middle mb-0">
             <thead class="table-dark">
                 <tr>
@@ -124,9 +90,9 @@ $grand_total_thn = $total_sewa_thn + $total_denda_thn;
                 $no = 1;
                 $total_sewa_bln = 0;
                 $total_denda_bln = 0;
-                
-                if ($result_detail->num_rows > 0): 
-                    while($row = $result_detail->fetch_assoc()): 
+
+                if ($result_detail->num_rows > 0):
+                    while($row = $result_detail->fetch_assoc()):
                         $total_sewa_bln += $row['sewa'];
                         $total_denda_bln += $row['denda'];
                         $subtotal = $row['sewa'] + $row['denda'];
@@ -144,14 +110,14 @@ $grand_total_thn = $total_sewa_thn + $total_denda_thn;
                 </tr>
                 <?php endwhile; ?>
                 <tr class="table-secondary fw-bold">
-                    <td colspan="4" class="text-end">TOTAL KHUSUS BULAN INI :</td>
+                    <td colspan="4" class="text-end">TOTAL BULAN INI</td>
                     <td>Rp<?= number_format($total_sewa_bln, 0, ',', '.'); ?></td>
                     <td class="text-danger">Rp<?= number_format($total_denda_bln, 0, ',', '.'); ?></td>
                     <td class="table-dark text-white">Rp<?= number_format($total_sewa_bln + $total_denda_bln, 0, ',', '.'); ?></td>
                 </tr>
                 <?php else: ?>
                 <tr>
-                    <td colspan="7" class="text-center py-4 text-muted">Tidak ada transaksi pada periode ini.</td>
+                    <td colspan="7" class="text-center py-4 text-muted">Tidak ada transaksi.</td>
                 </tr>
                 <?php endif; ?>
             </tbody>
@@ -159,34 +125,36 @@ $grand_total_thn = $total_sewa_thn + $total_denda_thn;
     </div>
 
     <div class="row g-3">
-        <div class="col-md-4">
+        <div class="col-4">
             <div class="card summary-card border-primary h-100">
-                <div class="card-header bg-primary text-white text-center">Total Sewa (Tahun <?= $tahun_filter ?>)</div>
-                <div class="card-body text-center py-4">
-                    <h3 class="fw-bold">Rp<?= number_format($total_sewa_thn, 0, ',', '.'); ?></h3>
+                <div class="card-header bg-primary text-white text-center">Total Sewa <?= $tahun_filter ?></div>
+                <div class="card-body text-center">
+                    <strong>Rp<?= number_format($total_sewa_thn, 0, ',', '.'); ?></strong>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-4">
             <div class="card summary-card border-danger h-100">
-                <div class="card-header bg-danger text-white text-center">Total Denda (Tahun <?= $tahun_filter ?>)</div>
-                <div class="card-body text-center py-4">
-                    <h3 class="fw-bold">Rp<?= number_format($total_denda_thn, 0, ',', '.'); ?></h3>
+                <div class="card-header bg-danger text-white text-center">Total Denda <?= $tahun_filter ?></div>
+                <div class="card-body text-center">
+                    <strong>Rp<?= number_format($total_denda_thn, 0, ',', '.'); ?></strong>
                 </div>
             </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-4">
             <div class="card summary-card border-success h-100">
                 <div class="card-header bg-success text-white text-center">Total Pendapatan</div>
-                <div class="card-body text-center py-4">
-                    <h3 class="fw-bold">Rp<?= number_format($grand_total_thn, 0, ',', '.'); ?></h3>
+                <div class="card-body text-center">
+                    <strong>Rp<?= number_format($grand_total_thn, 0, ',', '.'); ?></strong>
                 </div>
             </div>
         </div>
     </div>
 
+    <div class="mt-4 text-end">
+        <p>Dicetak pada: <?= date('d-m-Y'); ?></p>
+    </div>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
